@@ -3,7 +3,33 @@ name = "seeed-money"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12, <3.13"
 dependencies = [
     "django>=6.0.2",
+    "django-environ>=0.13.0",
+    "djangorestframework>=3.16.1",
+    "drf-spectacular>=0.29.0",
+    "pre-commit>=4.5.1",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.1",
+]
+
+[tool.ruff]
+# 전체적인 타겟 버전과 줄 길이
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+# 추천하는 핵심 규칙 조합
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes (논리 에러)
+    "I",   # isort (임포트 정렬)
+]
+
+#[tool.ruff.lint.isort]
+# 장고 프로젝트라면 앱 이름을 'known-first-party'에 넣어주면 임포트 순서가 더 예쁘게 잡힙니다.
+#known-first-party = ["my_app_name"]

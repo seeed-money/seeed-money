@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.0  # 최신 버전 확인 후 사용 권장
+    hooks:
+      # 1. Lint: 문법 오류, 안 쓰는 변수, import 정리 등 체크
+      - id: ruff
+        args: [ --fix ] # 에러가 나면 자동으로 고칠 수 있는 건 고쳐줌
+
+      # 2. Format: Black처럼 코드를 예쁘게 정렬
+      - id: ruff-format
