@@ -9,6 +9,7 @@ dependencies = [
     "django-environ>=0.13.0",
     "djangorestframework>=3.16.1",
     "drf-spectacular>=0.29.0",
+    "gunicorn>=25.1.0",
     "pre-commit>=4.5.1",
 ]
 
