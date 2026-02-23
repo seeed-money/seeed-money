@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
+
 # 유저 데이터가 들어올때 이메일혈식, 필수필드 검증 등 pydantic의 기능을 수행한다
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, nickname, name, phone_number, password=None, **kwargs):
@@ -40,7 +41,6 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, max_length=255, verbose_name="이메일")
     nickname = models.CharField(max_length=50, unique=True, verbose_name="닉네임")
     name = models.CharField(max_length=50, verbose_name="이름")
-    # phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="핸드폰번호")
     phone_number = models.CharField(max_length=20, verbose_name="핸드폰번호")
     grade = models.IntegerField(
         default=1, verbose_name="회원등급 ex)1=일반회원, 2=스태프, 3=관리자"
