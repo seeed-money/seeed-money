@@ -19,9 +19,7 @@ class Account(models.Model):
     # 4. 계좌 별명: 사용자가 식별하기 쉬운 이름(예: 비상금)을 입력받습니다.
     account_name = models.CharField(max_length=50, verbose_name="계좌별명")
     # 5. 계좌 유형: 입출금, 적금 등의 유형을 저장하며 기본값은 보통예금입니다.
-    account_type = models.CharField(
-        max_length=20, choices=ACCOUNT_TYPE, default="CHECKING", verbose_name="계좌유형"
-    )
+    account_type = models.CharField(max_length=20, choices=ACCOUNT_TYPE, default="CHECKING", verbose_name="계좌유형")
     # 6. 주 계좌 여부: 해당 계좌가 사용자의 대표 계좌인지 체크하는 필드입니다.
     is_main = models.BooleanField(default=False, verbose_name="주계좌여부")
     # 7. 잔액: 최대 15자리 숫자를 소수점 없이 저장하며 기본값은 0원입니다.
@@ -49,8 +47,6 @@ class Account(models.Model):
         # 만약 현재 계좌를 주 계좌로 설정하여 저장하려고 한다면 로직을 실행합니다.
         if self.is_main:
             # 같은 유저의 기존 주 계좌들을 모두 찾아서 주 계좌 설정(is_main)을 해제합니다.
-            Account.objects.filter(user=self.user, is_main=True).exclude(id=self.id).update(
-                is_main=False
-            )
+            Account.objects.filter(user=self.user, is_main=True).exclude(id=self.id).update(is_main=False)
         # 최종적으로 부모 클래스의 저장 기능을 호출하여 실제 DB에 반영합니다.
         super().save(*args, **kwargs)
