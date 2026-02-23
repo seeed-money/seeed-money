@@ -10,7 +10,7 @@ echo "--- Python Path ---"
 which python
 echo "--------------------------"
 
-python /app/manage.py makemigrations --check --noinput
+python /app/manage.py makemigrations --noinput
 python /app/manage.py migrate
 
 #Todo
