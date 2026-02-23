@@ -85,7 +85,7 @@ DATABASES = {
     "default": dj_database_url.config(
         # 환경 변수에 DATABASE_URL이 있으면 쓰고, 없으면 로컬 기본값을 사용합니다.
         default=os.getenv(
-            "DATABASE_URL", "postgresql://postgres:postgres@localhost:15432/postgres"
+            "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/postgres"
         ),
         conn_max_age=600,
     )
