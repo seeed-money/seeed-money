@@ -12,9 +12,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("핸드폰 번호는 필수 항목입니다.")
 
         email = self.normalize_email(email)
-        user = self.model(
-            email=email, nickname=nickname, name=name, phone_number=phone_number, **kwargs
-        )
+        user = self.model(email=email, nickname=nickname, name=name, phone_number=phone_number, **kwargs)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -42,9 +40,7 @@ class CustomUser(AbstractUser):
     nickname = models.CharField(max_length=50, unique=True, verbose_name="닉네임")
     name = models.CharField(max_length=50, verbose_name="이름")
     phone_number = models.CharField(max_length=20, verbose_name="핸드폰번호")
-    grade = models.IntegerField(
-        default=1, verbose_name="회원등급 ex)1=일반회원, 2=스태프, 3=관리자"
-    )
+    grade = models.IntegerField(default=1, verbose_name="회원등급 ex)1=일반회원, 2=스태프, 3=관리자")
     is_active = models.BooleanField(default=True, verbose_name="활성화 여부")
     # 상태
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.ACTIVE)
