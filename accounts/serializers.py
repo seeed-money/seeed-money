@@ -1,0 +1,40 @@
+from rest_framework import serializers
+
+from .models import Account
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    # 은행 이름, 계좌 유형 이름(보통예금, 주식계좌등)
+    bank_name = serializers.CharField(source="get_bank_code_display", read_only=True)
+    type_name = serializers.CharField(source="get_account_type_display", read_only=True)
+
+    class Meta:
+        model = Account
+        # 사용자에게 보여주거나 입력받을 필드 목록
+        fields = [
+            "id",
+            "bank_code",
+            "bank_name",
+            "account_number",
+            "account_name",
+            "account_type",
+            "type_name",
+            "is_main",
+            "balance",
+            "created_at",
+        ]
+
+        # 불변의 사실 기록하는 컬럼 -> 수정 불가능하게 관리
+        read_only_fields = ["id", "created_at"]
+
+    def create(self, validated_data):
+        # 현재 로그인한 유저를 자동으로 할당하기 위해 view에서 유저 정보를 넘겨받음
+        return Account.objects.create(**validated_data)
+
+    def validate_balance(self, value):
+        # 계좌 개설 시 잔액이 0원 미만이 될 수 없도록 검사 로직을 추가
+        if value < 0:
+            # 잔액이 0보다 작으면 에러 메시지
+            raise serializers.ValidationError("초기 잔액은 0원 이상이어야 합니다.")
+        # 검사가 통과된 값을 반환
+        return value
