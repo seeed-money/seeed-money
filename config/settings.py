@@ -79,14 +79,17 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com#databases
 
-# [수정] 개별 변수(POSTGRES_USER 등) 방식에서 DATABASE_URL 통합 방식으로 변경
-# 이를 통해 GitHub Actions의 YAML 파일에서 변수 하나만 넘겨줘도 작동
+DB_USER = os.getenv("POSTGRES_USER", "postgres")
+DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
+DB_HOST = os.getenv("POSTGRES_HOST", "localhost")
+DB_PORT = os.getenv("POSTGRES_PORT", "5432")
+DB_NAME = os.getenv("POSTGRES_DB", "postgres")
+
+DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 DATABASES = {
     "default": dj_database_url.config(
-        # 환경 변수에 DATABASE_URL이 있으면 쓰고, 없으면 로컬 기본값을 사용합니다.
-        default=os.getenv(
-            "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/postgres"
-        ),
+        default=DATABASE_URL,
         conn_max_age=600,
     )
 }
