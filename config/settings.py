@@ -12,6 +12,7 @@ https://docs.djangoproject.com
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 import dj_database_url  # [수정] 패키지 임포트 추가
 
@@ -79,10 +80,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com#databases
+load_dotenv()
 
 DB_USER = os.getenv("POSTGRES_USER", "postgres")
 DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
-DB_HOST = os.getenv("POSTGRES_HOST", "localhost")
+DB_HOST = os.getenv("POSTGRES_HOST", "db")
 DB_PORT = os.getenv("POSTGRES_PORT", "5432")
 DB_NAME = os.getenv("POSTGRES_DB", "postgres")
 
