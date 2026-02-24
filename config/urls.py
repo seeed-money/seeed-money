@@ -17,14 +17,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
-
-# from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/accounts/", include("accounts.urls")),  # 계좌 관련 API 주소 설정
-    # path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    # path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    # path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path("api/transactions/", include("transactions.urls")),  # 거래 내역 API 주소 설정
     path("users/", include("users.urls")),  # 유저
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 ]
