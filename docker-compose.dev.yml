@@ -11,7 +11,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "15432:5432"
+      - "${POSTGRES_PORT_DOCKER}:${POSTGRES_PORT}"
+#    - "15432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck: # DB가 완전히 준비되었는지 확인
