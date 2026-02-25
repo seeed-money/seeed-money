@@ -43,7 +43,7 @@ class LoginSerializer(serializers.Serializer):
             if not user:
                 raise serializers.ValidationError("이메일 또는 비밀번호가 잘못되었습니다.")
 
-            # 삭제 대기 중이거나 삭제된 유저는 로그인 불가 처리 (선택 사항)
+            # 삭제 대기 중이거나 삭제된 유저는 로그인 불가 처리
             if user.status == "DELETED":
                 raise serializers.ValidationError("로그인할 수 없는 계정 상태입니다.")
         else:
