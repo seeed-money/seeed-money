@@ -11,6 +11,7 @@ https://docs.djangoproject.com
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
@@ -143,6 +144,15 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",  # 토큰용
         "rest_framework.authentication.SessionAuthentication",  # 브라우저 테스트용 (필수!)
     ),
+}
+
+SIMPLE_JWT = {
+    # access 토큰 30분으로 설정
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    # refresh 토큰 3일로 설정
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 

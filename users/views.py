@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -21,24 +22,27 @@ class UserRegisterView(generics.CreateAPIView):
 
 
 # 회원조회 및 수정(GET,PUT)
-class MyProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
-
-    def patch(self, request):
-        serializer = UserSerializer(request.user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# 겹치는 부분과 management와 합쳐지는 부분 주석처리
+# class MyProfileView(APIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     serializer_class = UserSerializer
+#
+#     def get(self, request):
+#         serializer = UserSerializer(request.user)
+#         return Response(serializer.data)
+#
+#     def patch(self, request):
+#         serializer = UserSerializer(request.user, data=request.data, partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 회원 로그인(POST)
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
+    serializer_class = LoginSerializer
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -59,10 +63,15 @@ class LoginView(APIView):
 # DestroyModelMixin: 삭제
 # GenericViewSet: 위의 3기능만을 사용하도록 조성한 환경
 # ModelViewSet: 모든 기능을 가진 환경
-class UserManagementViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class UserManagementViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAdminUser | IsSelf]  # 관리자이거나 본인이거나
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser | IsSelf]  # 관리자이거나 본인이거나
 
     def get_queryset(self):
         user = self.request.user
@@ -71,12 +80,24 @@ class UserManagementViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mi
         return self.queryset.filter(id=user.id)
 
     def perform_destroy(self, instance):
-        # DELETE 요청 시 모델의 soft_delete 메서드 호출
         instance.soft_delete()
 
+    @action(detail=False, methods=["put"], url_path="profile")
+    def profile(self, request):
+        user = request.user
+
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @extend_schema(
+        request=None,  # 핵심: JSON 입력창(Schema)을 숨깁니다.
+        responses={200: UserSerializer},  # 응답 형식은 그대로 유지
+    )
     @action(detail=True, methods=["post"], url_path="restore")
     def restore(self, request, pk=None):
-        """삭제 대기 유저 복구 액션: /users/management/{pk}/restore/"""
+        """삭제 대기 유저 복구: /users/management/{pk}/restore/"""
         user = self.get_object()
         if user.status == CustomUser.Status.DELETING:
             user.undo_delete()
