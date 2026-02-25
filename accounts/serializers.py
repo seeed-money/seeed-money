@@ -10,7 +10,7 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        # 사용자에게 보여주거나 입력받을 필드 목록
+        # 사용자에게 보여주거나 입력받을 기본 필드 목록
         fields = [
             "id",
             "user",
@@ -27,6 +27,16 @@ class AccountSerializer(serializers.ModelSerializer):
 
         # 불변의 사실 기록하는 컬럼 -> 수정 불가능하게 관리
         read_only_fields = ["id", "created_at", "user"]
+
+    def __init__(self, *args, **kwargs):
+        # ⭐️ 1. 뷰(View)에서 전달된 request 정보를 가져옵니다.
+        request = kwargs.get("context", {}).get("request")
+
+        super(AccountSerializer, self).__init__(*args, **kwargs)
+
+        # ⭐️ 2. 로그인한 유저가 관리자(is_staff)라면 'user_email' 필드를 동적으로 추가합니다.
+        if request and request.user and request.user.is_staff:
+            self.fields["user_email"] = serializers.ReadOnlyField(source="user.email")
 
     def create(self, validated_data):
         # 현재 로그인한 유저를 자동으로 할당하기 위해 view에서 유저 정보를 넘겨받음
