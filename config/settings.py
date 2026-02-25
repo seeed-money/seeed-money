@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "accounts",
     "users",
     "transactions",
+    # "analysis",
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,10 @@ STATIC_URL = "static/"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",  # 토큰용
+        "rest_framework.authentication.SessionAuthentication",  # 브라우저 테스트용 (필수!)
+    ),
 }
 
 

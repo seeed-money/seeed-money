@@ -16,7 +16,8 @@ class UserRegisterView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
     # 회원가입 직후 로직을 넣는 곳
-    def perform_create(self, serializer): ...
+    # def perform_create(self, serializer):
+    #     ...
 
 
 # 회원조회 및 수정(GET,PUT)
