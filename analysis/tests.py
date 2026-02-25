@@ -35,7 +35,7 @@ class AnalyzerTest(TestCase):
         """분석기가 Analysis 객체와 이미지 파일을 실제로 생성하는지 테스트"""
 
         # 1. 분석기 초기화
-        analyzer = TransactionAnalyzer(user=self.user, target_type="EXPENSE", period_type="Weekly", start_date=self.start_date, end_date=self.end_date)
+        analyzer = TransactionAnalyzer(user=self.user, period_type="Weekly", start_date=self.start_date, end_date=self.end_date)
 
         # 2. 분석 실행 (save_analysis 호출)
         analysis_instance = analyzer.save_analysis()
@@ -56,7 +56,7 @@ class AnalyzerTest(TestCase):
 
         # 3-4. 필드 데이터가 정확한지 확인
         self.assertEqual(analysis_instance.user, self.user)
-        self.assertEqual(analysis_instance.target_type, "EXPENSE")
+        # self.assertEqual(analysis_instance.target_type, "EXPENSE")
 
     def tearDown(self):
         """테스트 완료 후 생성된 테스트 이미지 파일 삭제 (저장소 정리)"""
