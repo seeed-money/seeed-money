@@ -13,6 +13,7 @@ class AccountSerializer(serializers.ModelSerializer):
         # 사용자에게 보여주거나 입력받을 필드 목록
         fields = [
             "id",
+            "user",
             "bank_code",
             "bank_name",
             "account_number",
@@ -25,7 +26,7 @@ class AccountSerializer(serializers.ModelSerializer):
         ]
 
         # 불변의 사실 기록하는 컬럼 -> 수정 불가능하게 관리
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "created_at", "user"]
 
     def create(self, validated_data):
         # 현재 로그인한 유저를 자동으로 할당하기 위해 view에서 유저 정보를 넘겨받음

@@ -11,6 +11,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = [
             "id",
+            "user",
             "account",
             "account_name",
             "transaction_type",
