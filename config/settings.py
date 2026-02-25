@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     "accounts",
     "users",
     "transactions",
-    # "analysis",
+    "analysis",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -125,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
@@ -157,3 +159,15 @@ SIMPLE_JWT = {
 
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+# Celery Configuration
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = "django-db"  # 결과를 Django DB에 저장
+CELERY_ACCEPT_CONTENT = ["json"]  # 데이터를 주고받을 때 사용하는 포멧
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Seoul"  # 가계부 앱이므로 한국 시간 설정 중요!
+CELERY_ENABLE_UTC = False  # 👈 Celery가 UTC 대신 로컬 시간을 쓰도록 강제
+DJANGO_CELERY_BEAT_TZ_AWARE = False  # 👈 ZoneInfo 객체의 localize 에러를 피하는 핵심 옵션
+
+# Celery Beat Database Scheduler
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
