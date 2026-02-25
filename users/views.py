@@ -92,7 +92,7 @@ class UserManagementViewSet(
         return Response(serializer.data)
 
     @extend_schema(
-        request=None,  # 핵심: JSON 입력창(Schema)을 숨깁니다.
+        request=None,  # JSON 입력창(Schema)을 숨김
         responses={200: UserSerializer},  # 응답 형식은 그대로 유지
     )
     @action(detail=True, methods=["post"], url_path="restore")

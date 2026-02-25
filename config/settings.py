@@ -171,3 +171,14 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False  # 👈 ZoneInfo 객체의 localize 에러�
 
 # Celery Beat Database Scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+# media
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# AWS media
+# INSTALLED_APPS += ['storages']
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#
+# AWS_STORAGE_BUCKET_NAME = 'your-bucket-name'
+# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'

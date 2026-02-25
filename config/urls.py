@@ -24,6 +24,7 @@ urlpatterns = [
     path("api/accounts/", include("accounts.urls")),  # 계좌 관련 API 주소 설정
     path("api/transactions/", include("transactions.urls")),  # 거래 내역 API 주소 설정
     path("api/users/", include("users.urls")),  # 유저
+    path("api/analysis/", include("analysis.urls")),  # 분석 앱의 URL 연결
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path("swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
