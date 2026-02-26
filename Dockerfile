@@ -38,7 +38,7 @@ COPY pyproject.toml uv.lock ./
 #의존성 설치
 #--frozen: uv.lock 파일과 일치하는지 확인
 #--no-install-project: 앱 코드를 복사하기 전에 라이브러리만 먼저 설치 (빌드 속도 향상)
-RUN uv sync --frozen --no-cache
+RUN uv sync --no-cache
 
 #나머지 소스 코드 복사
 COPY . .
