@@ -23,6 +23,7 @@ dependencies = [
     "matplotlib>=3.10.8",
     "pandas>=3.0.1",
     "pillow>=12.1.1",
+    "google-generativeai",
 ]
 
 [dependency-groups]
