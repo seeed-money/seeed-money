@@ -1,5 +1,6 @@
 import io  # 메모리 내에서 이진 데이터(이미지 등)를 다루기 위한 모듈
 
+import google.generativeai as genai
 import matplotlib.pyplot as plt  # 그래프 시각화를 위한 라이브러리
 import pandas as pd  # 데이터를 표 형태로 가공하기 위한 라이브러리
 from django.core.files.base import ContentFile  # 메모리 데이터를 장고 파일 객체로 변환
@@ -78,6 +79,29 @@ class TransactionAnalyzer:
         plt.close()
         return buffer
 
+    def get_ai_advice_from_text(self, df):
+        try:
+            model = genai.GenerativeModel("models/gemini-flash-lite-latest")
+
+            total_income = df["INCOME"].sum() if "INCOME" in df.columns else 0
+            total_expense = df["EXPENSE"].sum() if "EXPENSE" in df.columns else 0
+            expense_ratio = (total_expense / total_income * 100) if total_income > 0 else 0
+
+            prompt = (
+                f"너는 냉철한 자산관리 전문가야. 아래는 사용자의 {self.period_type} 자산 내역 요약본이야.\n"
+                f"- 총 수입: {total_income:,}원\n"
+                f"- 총 지출: {total_expense:,}원\n"
+                f"- 수입 대비 지출 비중: {expense_ratio:.1f}%\n"
+                "이 수치를 바탕으로 사용자의 소비 습관에 대해 아주 짧고 매운맛 조언을 한국어로 한 줄만 해줘."
+            )
+
+            response = model.generate_content(prompt)
+            return response.text.strip()
+
+        except Exception as e:
+            # 에러 발생 시 로그를 찍고 기본 메시지 반환
+            print(f"ERROR: {str(e)}")
+
     def save_analysis(self):
         df = self.fetch_and_process_data()
         if df is None:
@@ -85,18 +109,24 @@ class TransactionAnalyzer:
 
         chart_buffer = self.create_visualization(df)
 
+        ai_description = self.get_ai_advice_from_text(df)
+        # ai_description = f"지원없음"
+
         # 총합 금액보다 입금,출금 두 그래프로 보여줌
         total_income = df["INCOME"].sum()
         total_expense = df["EXPENSE"].sum()
+
+        final_description = f"총 수입: {total_income:,}원 / 총 지출: {total_expense:,}원\nAI 조언: {ai_description}"
 
         new_analysis = Analysis(
             user=self.user,
             period_type=self.period_type,
             start_date=self.start_date,
             end_date=self.end_date,
-            description=f"분석 결과: 총 수입 {total_income}원, 총 지출 {total_expense}원",
+            description=final_description,
         )
 
-        file_name = f"chart_{self.user.id}_{timezone.now().strftime('%Y%m%d%H%M')}.png"
+        file_name = f"chart_{self.user.nickname}_{timezone.now().strftime('%Y%m%d')}_{self.period_type}.png"
         new_analysis.result_image.save(file_name, ContentFile(chart_buffer.getvalue()), save=True)
+        # new_analysis.result_image.save(file_name, ContentFile(chart_buffer.read()), save=True)
         return new_analysis

@@ -44,8 +44,15 @@
 #         # 3-1. Analysis 객체가 None이 아닌지 확인
 #         self.assertIsNotNone(analysis_instance)
 #
+#         print("\n" + "=" * 50)
+#         print(f"ID: {analysis_instance.id}")
+#         print(f"기간: {analysis_instance.period_type}")
+#         print(f"AI 분석 결과:\n{analysis_instance.description}")  # 이 부분이 핵심입니다!
+#         print("=" * 50 + "\n")
+#
 #         # 테스트 도중에는 DB에 데이터가 있으므로 개수가 1이 나옵니다.
-#         print(f"현재 DB에 저장된 분석 개수: {Analysis.objects.count()}")
+#         # print(f"현재 DB에 저장된 분석 개수: {Analysis.objects.count()}")
+#         # print(f"{Analysis.objects.first()}")
 #
 #         # 3-2. DB에 실제로 저장되었는지 확인
 #         self.assertEqual(Analysis.objects.count(), 1)

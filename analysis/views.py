@@ -3,6 +3,8 @@ from datetime import timedelta
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -22,6 +24,23 @@ class AnalysisListView(ListAPIView):
 
     serializer_class = AnalysisSerializer
     permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        # summary="분석 리스트 조회 및 생성",
+        parameters=[
+            OpenApiParameter(
+                name="period",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description="분석 기간 (weekly 또는 monthly)",
+                required=False,
+                enum=["weekly", "monthly"],
+                default="monthly",
+            ),
+        ],
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         user = self.request.user
