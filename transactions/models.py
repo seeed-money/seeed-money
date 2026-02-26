@@ -24,9 +24,9 @@ class Transaction(models.Model):
         # 관리지 페이지에서는 필드 이름 '계좌ID'
     )
     # amount (거래금액)
-    amount = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="거래금액")
+    amount = models.BigIntegerField(default=0, verbose_name="거래금액")
     # balance_after (거래후잔액)
-    balance_after = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="거래후잔액")
+    balance_after = models.BigIntegerField(default=0, verbose_name="거래후잔액")
     # description (거래내역) 😂
     description = models.CharField(max_length=255, verbose_name="거래내역")
     # transaction_type (거래유형)

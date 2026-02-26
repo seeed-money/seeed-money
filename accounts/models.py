@@ -23,7 +23,7 @@ class Account(models.Model):
     # 6. 주 계좌 여부: 해당 계좌가 사용자의 대표 계좌인지 체크하는 필드입니다.
     is_main = models.BooleanField(default=False, verbose_name="주계좌여부")
     # 7. 잔액: 최대 15자리 숫자를 소수점 없이 저장하며 기본값은 0원입니다.
-    balance = models.DecimalField(max_digits=15, decimal_places=0, default=0, verbose_name="잔액")
+    balance = models.BigIntegerField(default=0, verbose_name="잔액")
     # 8. 등록 일시: 데이터가 처음 생성될 때의 시간이 자동으로 저장됩니다.
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="등록일시")
     # 9. 수정 일시: 데이터가 업데이트될 때마다 현재 시간이 자동으로 갱신됩니다.

@@ -1,6 +1,8 @@
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import permissions, viewsets
 
+from notifications.models import Notification  # 알림 모델 임포트
+
 from .models import Transaction
 from .serializers import TransactionSerializer
 
@@ -35,4 +37,13 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         # ⭐️2.현재 로그인된 유저 정보를 모델의 user 필드에 자동으로 넣어줌
-        serializer.save(user=self.request.user)
+        transaction = serializer.save(user=self.request.user)
+
+        # ⭐️ 3. 알림 메시지 생성 로직
+        # transaction_type이 'INCOME'이면 수입, 아니면 지출로 표시
+        t_type = "수입" if transaction.transaction_type == "INCOME" else "지출"
+        amount = int(transaction.amount)
+        message = f"새로운 {t_type}이 발생했습니다: {amount}원 ({transaction.description})"
+
+        # ⭐️ 4. 알림 데이터 생성 (DB 저장)
+        Notification.objects.create(user=self.request.user, message=message, is_read=False)
