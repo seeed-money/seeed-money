@@ -34,3 +34,9 @@ worker-1  | [2026-02-25 17:15:10,515: INFO/ForkPoolWorker-8] 소비 패턴 분�
 worker-1  | [2026-02-25 17:15:10,515: INFO/ForkPoolWorker-8] 소비 패턴 분석 완료!
 worker-1  | [2026-02-25 17:15:10,523: INFO/ForkPoolWorker-8] Task analysis.tasks.analyze_spending_habit[1f0d1d57-d780-4962-a0be-be1c85dcce2b] succeeded in 0.00865062499724445s: 'Analysis Completed'
 ```
+```
+worker-1  | [2026-02-26 11:09:51,354: INFO/MainProcess] Task analysis.tasks.analyze_spending_habit[8bbafbcb-4db6-45df-a602-99beafee29b6] received
+worker-1  | [2026-02-26 11:09:51,355: INFO/ForkPoolWorker-7] 🚀워렌버핏 빙의한 AI의 소비 분석 시작...
+worker-1  | [2026-02-26 11:09:56,781: INFO/ForkPoolWorker-7] 😎분석 완료! 이번 달 총 지출: 8000원
+worker-1  | [2026-02-26 11:09:56,781: INFO/ForkPoolWorker-7] 😁AI의 조언: 부모님 효도와 게임 한 판의 가치가 동급인 시점에서 당신의 경제적 우선순위는 이미 파산 상태입니다.
+worker-1  | [2026-02-26 11:09:56,784: INFO/ForkPoolWorker-7] Task analysis.tasks.analyze_spending_habit[8bbafbcb-4db6-45df-a602-99beafee29b6] succeeded in 5.429903252000258s: '부모님 효도와 게임 한 판의 가치가 동급인 시점에서 당신의 경제적 우선순위는 이미 파산 상태입니다.'
