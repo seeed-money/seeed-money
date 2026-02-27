@@ -21,7 +21,7 @@ services:
       retries: 5
 
   web:
-    build: guul3in/seeed-money-web:latest
+    image: guul3in/seeed-money-web:latest
     command: /app/scripts/run.sh
     env_file:
       - .env
@@ -46,7 +46,7 @@ services:
 
   # 2. Worker: 실제로 파이썬 코드를 실행해서 일을 처리하는 일꾼
   worker:
-    build: guul3in/seeed-money-worker:latest
+    image: guul3in/seeed-money-worker:latest
     command: celery -A config worker -l info
     env_file:
       - .env
@@ -61,7 +61,7 @@ services:
 
   # 3. Beat: 스케줄러 (매일 아침 9시! 같은 시간을 체크해서 일꾼에게 알려줌)
   beat:
-    build: guul3in/seeed-money-beat:latest
+    image: guul3in/seeed-money-beat:latest
     command: celery -A config beat -l info
     env_file:
       - .env
