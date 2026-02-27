@@ -40,8 +40,8 @@ jobs:
           script: |
             cd ~/seeed-money
             # 2. 최신 이미지 땡겨오기 (web, worker, beat 한꺼번에)
-            sudo docker compose -f docker-compose.dev.yml pull
+            docker compose -f docker-compose.dev.yml pull
             # 3. 컨테이너 재시작 (변경사항이 있는 것만 알아서 재시작됨)
-            sudo docker compose -f docker-compose.dev.yml up -d
+            docker compose -f docker-compose.dev.yml up -d
             # 4. 안 쓰는 옛날 이미지 정리 (용량 확보)
-            sudo docker image prune -f
+            docker image prune -f

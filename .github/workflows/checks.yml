@@ -5,9 +5,6 @@ name: Code Quality Checks
 on:
   push:
     branches:
-      - feat
-      - fix
-      - zero
       - main
   pull_request:
     branches:
