@@ -30,4 +30,4 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/seeed-money-web:latest,${{ secrets.DOCKER_USERNAME }}/seeed-money-worker:latest,${{ secrets.DOCKER_USERNAME }}/seeed-money-beat:latest
+          tags: guul3in/seeed-money-web:latest,guul3in/seeed-money-worker:latest,guul3in/seeed-money-beat:latest
