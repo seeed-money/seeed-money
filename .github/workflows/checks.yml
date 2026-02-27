@@ -1,14 +1,15 @@
-# .github/workflows/checks.yml
-
 name: Code Quality Checks
 
 on:
   push:
     branches:
+      - main    # ⭐ 추가: 배포의 시작점이 되는 main 브랜치를 반드시 포함해야 합니다.
       - feat
       - fix
       - zero
   pull_request:
+    branches:
+      - main    # PR 대상 브랜치에 main을 추가하여 머지 전 검증을 강화합니다.
 
 jobs:
   ci:
@@ -16,7 +17,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres
+        image: postgres:16 # 버전을 명시하는 것이 로컬/운영 환경과의 일관성에 좋습니다.
         env:
           POSTGRES_USER: ${{ secrets.DB_USER }}
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -42,7 +43,15 @@ jobs:
       run: |
         curl -LsSf https://astral.sh/uv/install.sh | sh
         echo "$HOME/.local/bin" >> $GITHUB_PATH
-        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+    # ⭐ 추가: uv 캐시를 활용하여 패키지 설치 속도를 단축합니다.
+    - name: Set up uv cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/uv
+        key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-uv-
 
     - name: Install Packages & Libraries
       run: uv sync
@@ -52,9 +61,10 @@ jobs:
 
     - name: Run Django Migration
       env:
+        # DB 연결 정보를 환경변수로 주입합니다.
         DATABASE_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@127.0.0.1:5432/${{ secrets.DB_NAME }}
       run: |
-        uv run python manage.py makemigrations
+        uv run python manage.py makemigrations --check # 마이그레이션 파일 누락 여부 확인
         uv run python manage.py migrate
 
     - name: Run Django Tests
