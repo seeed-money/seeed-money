@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT_DOCKER}:${POSTGRES_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck: # DB가 완전히 준비되었는지 확인
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: guul3in/seeed-money-web:latest
+    command: /app/scripts/run.sh
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy # DB가 'healthy' 상태가 될 때까지 대기
+      redis:
+        condition: service_started
+    volumes:
+      - .:/app
+      - /app/.venv           # ⭐ 중요: 컨테이너의 .venv를 호스트로부터 보호함!
+
+
+    # 1. Redis: 일꾼들에게 줄 일감을 쌓아두는 창고
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  # 2. Worker: 실제로 파이썬 코드를 실행해서 일을 처리하는 일꾼
+  worker:
+    build: guul3in/seeed-money-worker:latest
+    command: celery -A config worker -l info
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/.venv
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  # 3. Beat: 스케줄러 (매일 아침 9시! 같은 시간을 체크해서 일꾼에게 알려줌)
+  beat:
+    build: guul3in/seeed-money-beat:latest
+    command: celery -A config beat -l info
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/.venv
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  postgres_data:

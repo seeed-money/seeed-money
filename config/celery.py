@@ -23,7 +23,7 @@ def debug_task(self):
 # 5. [추가] 스케줄링 작업 등록 (방법 B)
 app.conf.beat_schedule = {
     "analysis-every-minute": {
-        "task": "analysis.tasks.analyze_spending_habit",
-        "schedule": 60.0,  # 60초마다 실행
+        "task": "analysis.tasks.analyze_spending_habi",
+        "schedule": 3600.0,  # 1시마다 실행
     },
 }
